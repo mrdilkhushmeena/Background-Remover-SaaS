@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netakit Tools - AI Solutions</title>
+    <style>
+        :root { --primary: #007bff; --dark: #2c3e50; }
+        body { font-family: sans-serif; margin: 0; padding: 0; color: #333; line-height: 1.6; }
+        
+        /* HEADER (Mobile Fixed) */
+        header { 
+            background: white; 
+            padding: 15px 20px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex; 
+            flex-wrap: wrap; /* Jadu yahan hai - mobile par tootega nahi */
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        
+        .logo { font-size: 22px; font-weight: bold; color: var(--dark); text-decoration: none; }
+        .logo span { color: var(--primary); }
+
+        /* Navigation Links */
+        .nav-links { display: flex; gap: 15px; align-items: center; }
+        .nav-links a { text-decoration: none; color: #666; font-size: 14px; font-weight: 500; }
+        .btn-login { background: var(--dark); color: white !important; padding: 6px 12px; border-radius: 4px; }
+
+        /* Mobile specific adjustments */
+        @media (max-width: 600px) {
+            header { flex-direction: column; gap: 10px; }
+            .nav-links { width: 100%; justify-content: space-between; margin-top: 10px; }
+        }
+
+        /* HERO SECTION */
+        .hero { text-align: center; padding: 60px 20px; background: linear-gradient(135deg, #f6f8fd 0%, #e9eeff 100%); }
+        .hero h1 { font-size: 32px; margin-bottom: 10px; color: var(--dark); }
+        .hero p { font-size: 16px; color: #666; max-width: 500px; margin: 0 auto 25px; }
+        .cta-btn { background: var(--primary); color: white; padding: 12px 25px; text-decoration: none; border-radius: 25px; font-weight: bold; display: inline-block; }
+
+        /* CARDS */
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        
+        .card { background: white; padding: 25px; border-radius: 10px; border: 1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+        .card h3 { margin-top: 0; color: var(--dark); }
+        .tag { font-size: 11px; padding: 3px 8px; border-radius: 10px; background: #e3f2fd; color: #007bff; font-weight: bold; }
+        
+        /* FOOTER */
+        footer { background: #f8f9fa; padding: 30px 20px; text-align: center; font-size: 13px; color: #777; margin-top: 50px; }
+        .footer-links a { margin: 0 10px; color: #555; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="/" class="logo">Netakit<span>Tools</span></a>
+        <nav class="nav-links">
+            <a href="https://netakit.com">Main Site</a>
+            <a href="#api">API</a>
+            <a href="/login" class="btn-login">Dashboard</a>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <h1>Smart AI Tools</h1>
+        <p>Enhance your images instantly. Free tools for creators and developers.</p>
+        <a href="/background-remover" class="cta-btn">✂️ Open BG Remover</a>
+    </div>
+
+    <div class="container">
+        <h3 style="text-align:center; color:#444;">Available Services</h3>
+        <div class="grid">
+            
+            <div class="card">
+                <span class="tag">POPULAR</span>
+                <h3>✂️ Background Remover</h3>
+                <p>Remove image backgrounds automatically with AI. High precision for humans.</p>
+                <a href="/background-remover" style="color:var(--primary); font-weight:bold; text-decoration:none;">Use Now &rarr;</a>
+            </div>
+
+            <div class="card">
+                <span class="tag">MAIN PRODUCT</span>
+                <h3>🎨 Poster Maker</h3>
+                <p>Create political & festival posters in seconds on our main platform.</p>
+                <a href="https://netakit.com" style="color:var(--primary); font-weight:bold; text-decoration:none;">Visit Netakit.com &rarr;</a>
+            </div>
+
+            <div class="card">
+                <span class="tag live">NEW TOOL</span>
+                <h3>📐 Image Resizer</h3>
+                <p>Resize dimensions or Compress file size for Instagram & Social Media.</p>
+                <a href="/image-resizer" style="color:var(--primary); font-weight:bold; text-decoration:none;">Launch Tool &rarr;</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container" id="api">
+        <div style="background:#222; color:#fff; padding:20px; border-radius:10px;">
+            <h3>👨‍💻 Developer API</h3>
+            <p style="font-size:14px; color:#aaa;">Integrate BG removal in your app.</p>
+            <code style="display:block; background:#333; padding:10px; border-radius:5px; font-family:monospace; overflow-x:auto;">
+                POST https://tools.netakit.com/api/remove<br>
+                Header: "X-API-KEY": "YOUR_KEY"
+            </code>
+            <br>
+            <a href="mailto:contact@netakit.com" style="color:white; text-decoration:underline;">Request Key</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Privacy</a> | <a href="#">Terms</a> | <a href="#">Contact</a>
+        </div>
+        <p>&copy; 2025 Netakit Tools</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Image Resizer & Compressor | Netakit Tools</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #f4f6f8; padding: 20px; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #333; margin-bottom: 5px; }
+        .tabs { display: flex; justify-content: center; margin: 20px 0; gap: 10px; }
+        .tab-btn { padding: 10px 20px; border: 1px solid #ddd; background: #eee; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .tab-btn.active { background: #007bff; color: white; border-color: #007bff; }
+        
+        .control-group { margin: 20px 0; text-align: left; display: none; } /* Default hidden */
+        .control-group.active { display: block; }
+        
+        input[type="number"], input[type="range"] { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        label { font-weight: bold; font-size: 14px; color: #555; }
+        
+        .preview-box { margin-top: 20px; border: 2px dashed #ccc; padding: 20px; border-radius: 8px; }
+        img#preview { max-width: 100%; max-height: 200px; display: none; margin: 0 auto; }
+        
+        button#actionBtn { background: #28a745; color: white; border: none; padding: 12px 30px; border-radius: 6px; font-size: 16px; cursor: pointer; width: 100%; margin-top: 15px; }
+        button#actionBtn:hover { background: #218838; }
+        
+        .back-link { display: block; margin-top: 20px; text-decoration: none; color: #666; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>📐 Image Resizer</h1>
+        <p>Resize dimensions or Compress file size.</p>
+
+        <input type="file" id="fileInput" accept="image/*" onchange="loadFile(event)">
+        
+        <div class="preview-box">
+            <p id="placeholder">No image selected</p>
+            <img id="preview">
+            <p id="info" style="font-size:12px; color:#777;"></p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab-btn active" onclick="switchTab('resize')">Resize (Pixels)</div>
+            <div class="tab-btn" onclick="switchTab('compress')">Compress (KB)</div>
+        </div>
+
+        <div id="resize-controls" class="control-group active">
+            <label>Width (px):</label>
+            <input type="number" id="width" placeholder="e.g. 1080">
+            <br><br>
+            <label>Height (px):</label>
+            <input type="number" id="height" placeholder="e.g. 1080">
+            <br>
+            <input type="checkbox" id="lockRatio" checked> <label for="lockRatio" style="font-weight:normal;">Lock Aspect Ratio</label>
+        </div>
+
+        <div id="compress-controls" class="control-group">
+            <label>Quality: <span id="qValue">80</span>%</label>
+            <input type="range" id="quality" min="10" max="100" value="80" oninput="document.getElementById('qValue').innerText = this.value">
+            <p style="font-size:12px; color:orange;">Note: Best for JPG images.</p>
+        </div>
+
+        <button id="actionBtn" onclick="processImage()">Download Processed Image</button>
+
+        <a href="/" class="back-link">&larr; Back to Home</a>
+    </div>
+
+    <script>
+        let originalWidth = 0;
+        let originalHeight = 0;
+        let currentMode = 'resize';
+
+        function loadFile(event) {
+            const img = document.getElementById('preview');
+            const file = event.target.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    document.getElementById('placeholder').style.display = 'none';
+                    
+                    // Get Dimensions
+                    const i = new Image();
+                    i.src = e.target.result;
+                    i.onload = function() {
+                        originalWidth = this.width;
+                        originalHeight = this.height;
+                        document.getElementById('width').value = originalWidth;
+                        document.getElementById('height').value = originalHeight;
+                        document.getElementById('info').innerText = `Original: ${originalWidth} x ${originalHeight} px`;
+                    };
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Aspect Ratio Logic
+        document.getElementById('width').addEventListener('input', function() {
+            if(document.getElementById('lockRatio').checked && originalWidth > 0) {
+                const ratio = originalHeight / originalWidth;
+                document.getElementById('height').value = Math.round(this.value * ratio);
+            }
+        });
+
+        document.getElementById('height').addEventListener('input', function() {
+            if(document.getElementById('lockRatio').checked && originalHeight > 0) {
+                const ratio = originalWidth / originalHeight;
+                document.getElementById('width').value = Math.round(this.value * ratio);
+            }
+        });
+
+        function switchTab(mode) {
+            currentMode = mode;
+            // Buttons Update
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Controls Update
+            document.querySelectorAll('.control-group').forEach(div => div.classList.remove('active'));
+            document.getElementById(mode + '-controls').classList.add('active');
+        }
+
+        async function processImage() {
+            const fileInput = document.getElementById('fileInput');
+            if(fileInput.files.length === 0) { alert("Please select an image first!"); return; }
+
+            const btn = document.getElementById('actionBtn');
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('mode', currentMode);
+
+            if (currentMode === 'resize') {
+                formData.append('width', document.getElementById('width').value);
+                formData.append('height', document.getElementById('height').value);
+            } else {
+                formData.append('quality', document.getElementById('quality').value);
+            }
+
+            try {
+                const response = await fetch('/api/process-image', { method: 'POST', body: formData });
+                
+                if (response.ok) {
+                    // Auto Download Logic
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = "netakit_edited.png"; // Name doesn't matter much here
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                } else {
+                    alert("Error processing image");
+                }
+            } catch (err) {
+                alert("Server Error");
+            }
+            btn.innerText = "Download Processed Image";
+            btn.disabled = false;
+        }
+    </script>
+</body>
+</html>
