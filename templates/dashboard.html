@@ -2,61 +2,9 @@
 <html>
 <head>
     <title>Admin Dashboard</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #f5f7fb;
-            padding: 20px;
-        }
-
-        h2 {
-            margin-bottom: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            text-align: left;
-        }
-
-        th {
-            background: #f1f5f9;
-        }
-
-        button {
-            padding: 6px 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .btn-primary { background: #2563eb; color: white; }
-        .btn-danger { background: red; color: white; }
-        .btn-green { background: #16a34a; color: white; }
-
-        input {
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
-<body>
+<body class="dashboard-body">
 
 <h2>⚡ Admin Dashboard</h2>
 
@@ -66,12 +14,10 @@
 
 <div class="card">
     <h3>🔑 API Keys</h3>
-
     <form action="/generate_key" method="post">
         <input type="text" name="name" placeholder="Client Name" required>
         <button class="btn-primary">Generate Key</button>
     </form>
-
     <table>
         <tr>
             <th>Name</th>
@@ -80,27 +26,20 @@
             <th>Limit</th>
             <th>Actions</th>
         </tr>
-
         {% for key in keys %}
         <tr>
             <td>{{ key[1] }}</td>
             <td style="font-family:monospace;">{{ key[2] }}</td>
             <td>{{ key[5] }}</td>
             <td>{{ key[4] }}</td>
-
             <td>
-                <!-- Update Limit -->
                 <form action="/update_limit/{{ key[0] }}" method="post" style="display:inline;">
                     <input type="number" name="limit" placeholder="Limit" required>
                     <button class="btn-primary">Set</button>
                 </form>
-
-                <!-- Reset -->
                 <form action="/reset_usage/{{ key[0] }}" method="post" style="display:inline;">
                     <button class="btn-green">Reset</button>
                 </form>
-
-                <!-- Delete -->
                 <form action="/delete_key/{{ key[0] }}" method="post" style="display:inline;">
                     <button class="btn-danger">Delete</button>
                 </form>
@@ -112,7 +51,6 @@
 
 <div class="card">
     <h3>📜 Recent Logs</h3>
-
     <table>
         <tr>
             <th>ID</th>
@@ -120,15 +58,12 @@
             <th>Time</th>
             <th>Status</th>
         </tr>
-
         {% for log in logs %}
         <tr>
             <td>{{ log[0] }}</td>
             <td style="font-family:monospace;">{{ log[1] }}</td>
             <td>{{ log[2] }}</td>
-            <td style="color: {{ 'green' if log[3]=='SUCCESS' else 'red' }}">
-                {{ log[3] }}
-            </td>
+            <td style="color: {{ 'green' if log[3]=='SUCCESS' else 'red' }}">{{ log[3] }}</td>
         </tr>
         {% endfor %}
     </table>
