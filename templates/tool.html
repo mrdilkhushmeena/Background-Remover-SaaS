@@ -4,163 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Background Remover</title>
-
-<style>
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #f7f9fc;
-  margin: 0;
-  text-align: center;
-}
-
-.container {
-  max-width: 500px;
-  margin: 60px auto;
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-}
-
-h1 {
-  margin-bottom: 10px;
-}
-
-p {
-  color: #666;
-}
-
-input[type="file"] {
-  border: 2px dashed #ccc;
-  padding: 30px;
-  width: 100%;
-  border-radius: 8px;
-  margin: 20px 0;
-  cursor: pointer;
-}
-
-button {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-button:hover {
-  background: #1d4ed8;
-}
-
-button:disabled {
-  background: #9ca3af;
-}
-
-img {
-  max-width: 100%;
-  margin-top: 20px;
-  border-radius: 8px;
-}
-
-.preview {
-  margin-top: 20px;
-}
-
-.loader {
-  margin-top: 15px;
-  font-size: 14px;
-  color: #555;
-}
-</style>
-
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
+<body class="tool-body">
 
 <div class="container">
 
   <h1>AI Background Remover</h1>
   <p>Upload image and remove background instantly</p>
 
-  <input type="file" id="fileInput" accept="image/*" onchange="previewImage()">
+  <input type="file" id="bgFileInput" accept="image/*" onchange="previewBgImage()">
 
   <div class="preview">
-    <img id="previewImg" style="display:none;">
+    <img id="bgPreviewImg" style="display:none;">
   </div>
 
-  <button onclick="uploadImage()" id="btn">Remove Background</button>
+  <button onclick="uploadBgImage()" id="bgBtn">Remove Background</button>
 
-  <div class="loader" id="loader" style="display:none;">
+  <div class="loader" id="bgLoader" style="display:none;">
     Processing AI...
   </div>
 
-  <div id="result" style="display:none;">
+  <div id="bgResult" style="display:none;">
     <h3>Result</h3>
-    <img id="outputImage">
+    <img id="bgOutputImage">
     <br><br>
-    <a id="downloadLink" download="output.png">
+    <a id="bgDownloadLink" download="output.png">
       <button style="background:#16a34a;">Download</button>
     </a>
   </div>
 
 </div>
 
-<script>
-
-function previewImage() {
-  const file = document.getElementById("fileInput").files[0];
-  const preview = document.getElementById("previewImg");
-
-  if(file) {
-    preview.src = URL.createObjectURL(file);
-    preview.style.display = "block";
-  }
-}
-
-async function uploadImage() {
-  const fileInput = document.getElementById('fileInput');
-  const btn = document.getElementById('btn');
-  const loader = document.getElementById('loader');
-  const resultDiv = document.getElementById('result');
-
-  if(fileInput.files.length === 0) {
-    alert("Select image first");
-    return;
-  }
-
-  btn.disabled = true;
-  loader.style.display = "block";
-
-  const formData = new FormData();
-  formData.append('file', fileInput.files[0]);
-
-  try {
-    const response = await fetch('/web_remove', {
-      method: 'POST',
-      body: formData
-    });
-
-    if(response.ok) {
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-
-      document.getElementById("outputImage").src = url;
-      document.getElementById("downloadLink").href = url;
-
-      resultDiv.style.display = "block";
-    } else {
-      alert("Error processing image");
-    }
-
-  } catch(err) {
-    alert("Server error");
-  }
-
-  loader.style.display = "none";
-  btn.disabled = false;
-}
-
-</script>
-
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
